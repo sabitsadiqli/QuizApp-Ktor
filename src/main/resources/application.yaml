@@ -1,0 +1,7 @@
+ktor:
+  application:
+    modules:
+      - com.quiz.ApplicationKt.main
+
+  deployment:
+    port: 8080
