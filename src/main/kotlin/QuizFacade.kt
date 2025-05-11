@@ -2,6 +2,7 @@ package com.quiz
 
 import com.quiz.model.AllLevelsQuestions
 import com.quiz.model.LevelQuestionGroup
+import com.quiz.repository.quiz_repository.QuestionRepository
 import model.QuizResult
 
 

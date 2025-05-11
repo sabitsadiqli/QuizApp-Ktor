@@ -1,10 +1,11 @@
-package com.quiz
+package com.quiz.repository_impl.quiz
 
 import com.quiz.db.QuestionTable
 import com.quiz.db.QuizResultTable
 import com.quiz.model.AllLevelsQuestions
 import com.quiz.model.LevelQuestionGroup
 import com.quiz.model.Question
+import com.quiz.repository.quiz_repository.QuestionRepository
 import model.QuizResult
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.select
@@ -52,7 +53,7 @@ class QuestionRepositoryImpl : QuestionRepository {
             )
         }
 
-        LevelQuestionGroup(level = level,questions = questions)
+        LevelQuestionGroup(level = level, questions = questions)
     }
 
     override suspend fun calculateResult(level: Int, answers: List<Int>): QuizResult {
@@ -72,14 +73,14 @@ class QuestionRepositoryImpl : QuestionRepository {
     }
 
     override suspend fun insertResult(result: QuizResult) {
-            transaction {
-                QuizResultTable.insert {
-                    it[level] = result.level
-                    it[totalQuestions] = result.totalQuestions
-                    it[correctCount] = result.correctCount
-                    it[percentage] = result.percentage
-                }
+        transaction {
+            QuizResultTable.insert {
+                it[level] = result.level
+                it[totalQuestions] = result.totalQuestions
+                it[correctCount] = result.correctCount
+                it[percentage] = result.percentage
             }
+        }
     }
 
     override suspend fun getAllResults(): List<QuizResult> = transaction {

@@ -12,7 +12,8 @@ import org.koin.logger.slf4jLogger
 
 fun Application.main() {
     DatabaseFactory.init()
-    val facade: QuizFacade by inject()
+    val quizFacade: QuizFacade by inject()
+    val userFacade: UserFacade by inject()
 
     io.ktor.server.engine.embeddedServer(Netty, port = 8080) {
         install(ContentNegotiation) {
@@ -25,7 +26,8 @@ fun Application.main() {
         }
 
         routing {
-            quizRoutes(facade)
+            quizRoutes(quizFacade)
+            userRoutes(userFacade)
         }
     }.start(wait = true)
 }

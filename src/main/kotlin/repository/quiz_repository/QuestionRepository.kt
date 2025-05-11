@@ -1,4 +1,4 @@
-package com.quiz
+package com.quiz.repository.quiz_repository
 
 import com.quiz.model.AllLevelsQuestions
 import com.quiz.model.LevelQuestionGroup
