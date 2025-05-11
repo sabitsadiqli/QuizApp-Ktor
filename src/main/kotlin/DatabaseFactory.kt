@@ -1,6 +1,7 @@
 package com.quiz
 
 import com.quiz.db.QuestionTable
+import com.quiz.db.QuizResultTable
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -15,6 +16,7 @@ object DatabaseFactory {
         )
         transaction(db) {
             SchemaUtils.create(QuestionTable)
+            SchemaUtils.create(QuizResultTable)
         }
     }
 }
