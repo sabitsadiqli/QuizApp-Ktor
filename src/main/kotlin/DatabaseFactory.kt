@@ -2,6 +2,7 @@ package com.quiz
 
 import com.quiz.db.QuestionTable
 import com.quiz.db.QuizResultTable
+import db.RefreshTokenTable
 import db.user.UserTable
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
@@ -17,6 +18,7 @@ object DatabaseFactory {
         )
         transaction(db) {
             SchemaUtils.create(QuestionTable)
+            SchemaUtils.create(RefreshTokenTable)
             SchemaUtils.create(QuizResultTable)
             SchemaUtils.create(UserTable)
         }

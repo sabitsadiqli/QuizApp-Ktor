@@ -3,8 +3,7 @@ package model
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class QuizSubmissionRequest(
+data class RefreshRequest(
     val userId: String,
-    val level: Int,
-    val answers: List<Int>
+    val refreshToken: String
 )

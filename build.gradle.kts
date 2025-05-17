@@ -47,4 +47,13 @@ dependencies {
     implementation("io.insert-koin:koin-core:3.5.3")
     implementation("io.insert-koin:koin-ktor:3.5.3")
     implementation("io.insert-koin:koin-logger-slf4j:3.5.3")
+
+    implementation("com.auth0:java-jwt:4.4.0")
+
+    // Ktor-un auth və JWT auth modullarını əlavə et
+    implementation("io.ktor:ktor-server-auth:2.3.7")
+    implementation("io.ktor:ktor-server-auth-jwt:2.3.7")
+
+    //web-socket
+    implementation("io.ktor:ktor-server-websockets:3.1.3")
 }

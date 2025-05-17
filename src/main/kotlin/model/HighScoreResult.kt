@@ -3,8 +3,8 @@ package model
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class QuizSubmissionRequest(
+data class HighScoreResult(
     val userId: String,
     val level: Int,
-    val answers: List<Int>
+    val highestScore: Double
 )

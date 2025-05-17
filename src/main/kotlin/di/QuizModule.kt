@@ -1,18 +1,18 @@
-package com.quiz.di
+package di
 
-import com.quiz.repository.quiz_repository.QuestionRepository
-import com.quiz.repository_impl.quiz.QuestionRepositoryImpl
+import AuthFacade
+import repository.quiz_repository.QuestionRepository
+import repository_impl.quiz.QuestionRepositoryImpl
 import com.quiz.QuizFacade
-import com.quiz.UserFacade
-import com.quiz.repository.user_repository.UserRepository
 import org.koin.dsl.module
-import repository_impl.user.UserRepositoryImpl
+import repository.auth.AuthRepository
+import repository_impl.auth.AuthRepositoryImpl
 
 val quizModule = module {
     single<QuestionRepository> { QuestionRepositoryImpl() }
     single { QuizFacade(get()) }
 
-    //user
-    single<UserRepository> { UserRepositoryImpl() }
-    single { UserFacade(get()) }
+    //Auth
+    single<AuthRepository> { AuthRepositoryImpl() }
+    single { AuthFacade(get()) }
 }
