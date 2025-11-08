@@ -27,12 +27,15 @@ dependencies {
     implementation("ch.qos.logback:logback-classic:$logback_version")
     implementation("io.ktor:ktor-server-core")
     implementation("io.ktor:ktor-server-config-yaml")
+    implementation("io.ktor:ktor-server-host-common:3.1.3")
+    implementation("io.ktor:ktor-server-status-pages:3.1.3")
     testImplementation("io.ktor:ktor-server-test-host")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
 
-    implementation("io.ktor:ktor-server-core:2.3.7")
-    implementation("io.ktor:ktor-server-netty:2.3.7")
+    implementation("io.ktor:ktor-server-core:2.3.12")
+    implementation("io.ktor:ktor-server-netty:2.3.12")
     implementation("io.ktor:ktor-server-content-negotiation:2.3.7")
+    implementation("io.ktor:ktor-client-content-negotiation:2.3.7")
     implementation("io.ktor:ktor-serialization-kotlinx-json:2.3.7")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
 
@@ -44,9 +47,9 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-jdbc:0.45.0")
 
     //koin
-    implementation("io.insert-koin:koin-core:3.5.3")
-    implementation("io.insert-koin:koin-ktor:3.5.3")
-    implementation("io.insert-koin:koin-logger-slf4j:3.5.3")
+    implementation("io.insert-koin:koin-core:3.5.6")
+    implementation("io.insert-koin:koin-ktor:3.5.6")
+    implementation("io.insert-koin:koin-logger-slf4j:3.5.6")
 
     implementation("com.auth0:java-jwt:4.4.0")
 
@@ -54,6 +57,10 @@ dependencies {
     implementation("io.ktor:ktor-server-auth:2.3.7")
     implementation("io.ktor:ktor-server-auth-jwt:2.3.7")
 
-    //web-socket
-    implementation("io.ktor:ktor-server-websockets:3.1.3")
+    implementation("io.ktor:ktor-server-status-pages:3.1.3")
+    implementation("com.google.code.gson:gson:2.10.1")
+
+    // OpenAI SDK
+    implementation("com.aallam.openai:openai-client:3.7.0")
+    implementation("io.ktor:ktor-client-cio:2.3.7")
 }
