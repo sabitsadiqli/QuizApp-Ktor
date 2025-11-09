@@ -1,18 +1,27 @@
 package com.quiz.modules.auth
 
-import com.quiz.user.UserTable
 import com.quiz.user.RegisterResponse
 import com.quiz.user.User
+import com.quiz.user.UserTable
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
 
 class AuthRepositoryImpl : AuthRepository {
-    override suspend fun validateUserCredentials(userId: String, password: String): Boolean = transaction {
-       UserTable.select { (UserTable.userId eq userId) and (UserTable.password eq password) }
-            .count() > 0
+    override suspend fun validateUserCredentials(userId: String, password: String): User = transaction {
+        val row = UserTable.select {
+            (UserTable.userId eq userId) and (UserTable.password eq password)
+        }.singleOrNull() ?: error("Invalid credentials")
+
+        User(
+            id = row[UserTable.id].value,
+            userId = row[UserTable.userId],
+            password = row[UserTable.password],
+            isAdmin = row[UserTable.isAdmin]
+        )
     }
+
 
     override suspend fun register(userId: String, password: String,isAdmin: Boolean): RegisterResponse {
         return try {

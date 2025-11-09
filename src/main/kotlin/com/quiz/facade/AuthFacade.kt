@@ -1,16 +1,16 @@
 package com.quiz.facade
 
-import com.quiz.user.RegisterResponse
-import com.quiz.user.User
 import com.quiz.modules.auth.AuthRepository
 import com.quiz.modules.quiz.QuizRepository
+import com.quiz.user.RegisterResponse
+import com.quiz.user.User
 
 class AuthFacade(
     private val repository: AuthRepository,
     private val quizRepository: QuizRepository,
 ) {
 
-    suspend fun login(userId: String, password: String): Boolean? {
+    suspend fun login(userId: String, password: String): User {
         return repository.validateUserCredentials(userId, password)
     }
 

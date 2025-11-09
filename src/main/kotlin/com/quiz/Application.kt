@@ -18,7 +18,13 @@ import org.koin.ktor.ext.inject
 import org.koin.ktor.plugin.Koin
 import org.koin.logger.slf4jLogger
 import com.quiz.modules.auth.authRoutes
+import com.quiz.modules.quiz.adminQuizRoutes
+import com.quiz.modules.quiz.imageUploadRoutes
 import com.quiz.modules.quiz.quizRoutes
+import io.ktor.server.http.content.files
+import io.ktor.server.http.content.static
+import io.ktor.server.http.content.staticFiles
+import java.io.File
 
 fun main() {
     embeddedServer(Netty, port = 8080) {
@@ -65,8 +71,12 @@ fun Application.module() {
     }
 
     routing {
+        staticFiles("/uploads", File(AppConfig.UPLOAD_DIR))
+
         authRoutes(authFacade)
         quizRoutes(quizFacade)
+        adminQuizRoutes(quizFacade)
+        imageUploadRoutes()
     }
 }
 

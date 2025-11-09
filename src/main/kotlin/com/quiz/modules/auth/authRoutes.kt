@@ -17,13 +17,10 @@ fun Route.authRoutes(authFacade: AuthFacade) {
             throw ApiException(HttpStatusCode.BadRequest, "İstifadəçi ID və şifrə boş ola bilməz.")
         }
 
-        val isValidUser = authFacade.login(request.userId, request.password)
-        if (isValidUser != null) {
-            call.respond(isValidUser)
-        } else {
-            throw ApiException(HttpStatusCode.BadRequest, "İstifadəçi ID və ya şifrə yanlışdır.")
-        }
+        val user = authFacade.login(request.userId, request.password)
+        call.respond(HttpStatusCode.OK, user)
     }
+
 
     post("auth/register") {
         val user = call.receive<User>()

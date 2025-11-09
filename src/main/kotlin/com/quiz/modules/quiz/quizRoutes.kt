@@ -8,15 +8,15 @@ import io.ktor.server.routing.get
 import io.ktor.server.routing.post
 
 fun Route.quizRoutes(quizFacade: QuizFacade) {
-    get("/grades") {
-        call.respond(quizFacade.getAllGrades())
+    get("/categories") {
+        call.respond(quizFacade.getAllCategories())
     }
 
-    get("/grades/{gradeId}/quizzes") {
+    get("/categories/{categoryId}/quizzes") {
         val userId = call.request.queryParameters["userId"] ?: error("Missing userId")
-        val gradeId = call.parameters["gradeId"]?.toInt() ?: error("Missing gradeId")
+        val categoryId = call.parameters["categoryId"]?.toInt() ?: error("Missing categoryId")
 
-        call.respond(quizFacade.getQuizzesForGrade(userId, gradeId))
+        call.respond(quizFacade.getQuizForCategory(userId, categoryId))
     }
 
     get("/quiz/{quizId}/questions") {

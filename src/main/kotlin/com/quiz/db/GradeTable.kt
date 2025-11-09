@@ -21,6 +21,7 @@ object QuestionTable : IntIdTable("questions") {
     val optionB = varchar("option_b", 255)
     val optionC = varchar("option_c", 255)
     val optionD = varchar("option_d", 255)
+    val image = varchar("image", 255).nullable()
     val correctAnswerIndex = integer("correct_answer_index")
 }
 

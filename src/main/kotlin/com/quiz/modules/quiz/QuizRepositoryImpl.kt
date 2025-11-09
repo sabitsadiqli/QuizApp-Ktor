@@ -4,12 +4,14 @@ import com.quiz.db.GradeTable
 import com.quiz.db.QuestionTable
 import com.quiz.db.QuizTable
 import com.quiz.db.UserQuizProgressTable
-import com.quiz.modules.quiz.model.Grade
+import com.quiz.modules.quiz.model.Category
+import com.quiz.modules.quiz.model.QuestionCreateRequest
 import com.quiz.modules.quiz.model.QuestionDTO
 import com.quiz.modules.quiz.model.QuizWithStatus
 import com.quiz.user.UserTable
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.sql.and
+import org.jetbrains.exposed.sql.insertAndGetId
 import org.jetbrains.exposed.sql.insertIgnore
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.selectAll
@@ -37,9 +39,9 @@ class QuizRepositoryImpl : QuizRepository {
     }
 
 
-    override fun getAllGrades(): List<Grade> = transaction {
+    override fun getAllCategories(): List<Category> = transaction {
         GradeTable.selectAll().map { row ->
-            Grade(
+            Category(
                 id = row[GradeTable.id].value,
                 name = row[GradeTable.name],
                 isLocked = row[GradeTable.isLocked],
@@ -88,6 +90,7 @@ class QuizRepositoryImpl : QuizRepository {
                         row[QuestionTable.optionC],
                         row[QuestionTable.optionD]
                     ),
+                    image = row[QuestionTable.image],
                     correctAnswerIndex = row[QuestionTable.correctAnswerIndex]
                 )
             }
@@ -110,4 +113,93 @@ class QuizRepositoryImpl : QuizRepository {
             }
         }
     }
+
+    //Add quiz
+    override fun addQuizToCategory(categoryId: Int, title: String): QuizWithStatus = transaction {
+        val newQuizId = QuizTable.insertAndGetId {
+            it[grade] = EntityID(categoryId, GradeTable)
+            it[QuizTable.title] = title
+            it[isLocked] = true // new quizzes are locked by default
+        }.value
+
+        QuizWithStatus(
+            id = newQuizId,
+            title = title,
+            isUnlocked = true,
+            isCompleted = false,
+        )
+    }
+
+    override fun addQuestionToQuiz(quizId: Int, question: QuestionCreateRequest): QuestionDTO = transaction {
+        val newQuestionId = QuestionTable.insertAndGetId {
+            it[quiz] = EntityID(quizId, QuizTable)
+            it[questionText] = question.questionText
+            it[optionA] = question.options[0]
+            it[optionB] = question.options[1]
+            it[optionC] = question.options[2]
+            it[optionD] = question.options[3]
+            it[image] = question.image ?: ""
+            it[correctAnswerIndex] = question.correctAnswerIndex
+        }.value
+
+        QuestionDTO(
+            id = newQuestionId,
+            questionText = question.questionText,
+            options = question.options,
+            image = question.image,
+            correctAnswerIndex = question.correctAnswerIndex
+        )
+    }
+
+    override fun editQuestion(questionId: Int, updatedQuestion: QuestionCreateRequest): QuestionDTO = transaction {
+        val quizExists = QuizTable.select { QuizTable.id eq updatedQuestion.quizId }.singleOrNull()
+            ?: error("Quiz not found")
+
+        QuestionTable.update({ QuestionTable.id eq questionId }) {
+            it[quiz] = EntityID(updatedQuestion.quizId, QuizTable)
+            it[questionText] = updatedQuestion.questionText
+            it[optionA] = updatedQuestion.options[0]
+            it[optionB] = updatedQuestion.options[1]
+            it[optionC] = updatedQuestion.options[2]
+            it[optionD] = updatedQuestion.options[3]
+            it[image] = updatedQuestion.image
+            it[correctAnswerIndex] = updatedQuestion.correctAnswerIndex
+        }
+
+        QuestionTable.select { QuestionTable.id eq questionId }
+            .map { row ->
+                QuestionDTO(
+                    id = row[QuestionTable.id].value,
+                    questionText = row[QuestionTable.questionText],
+                    options = listOf(
+                        row[QuestionTable.optionA],
+                        row[QuestionTable.optionB],
+                        row[QuestionTable.optionC],
+                        row[QuestionTable.optionD]
+                    ),
+                    image = row[QuestionTable.image],
+                    correctAnswerIndex = row[QuestionTable.correctAnswerIndex]
+                )
+            }.first()
+    }
+
+    override fun getAllQuestionsByQuiz(quizId: Int): List<QuestionDTO> = transaction {
+        QuestionTable.select { QuestionTable.quiz eq EntityID(quizId, QuizTable) }
+            .map { row ->
+                QuestionDTO(
+                    id = row[QuestionTable.id].value,
+                    questionText = row[QuestionTable.questionText],
+                    options = listOf(
+                        row[QuestionTable.optionA],
+                        row[QuestionTable.optionB],
+                        row[QuestionTable.optionC],
+                        row[QuestionTable.optionD]
+                    ),
+                    image = row[QuestionTable.image],
+                    correctAnswerIndex = row[QuestionTable.correctAnswerIndex]
+                )
+            }
+    }
+
+
 }
