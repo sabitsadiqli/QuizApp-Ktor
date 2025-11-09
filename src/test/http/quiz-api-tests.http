@@ -1,0 +1,47 @@
+### Create a new topic
+POST http://localhost:8080/api/topics
+Content-Type: application/json
+
+{
+  "name": "Java Programming",
+  "description": "Basic Java programming concepts"
+}
+
+### Get all topics
+GET http://localhost:8080/api/topics
+
+### Get a specific topic
+GET http://localhost:8080/api/topics/1
+
+### Generate questions
+POST http://localhost:8080/api/questions/generate
+Content-Type: application/json
+
+{
+  "topicId": 1,
+  "difficultyLevel": "BEGINNER",
+  "count": 3
+}
+
+### Get questions by topic
+GET http://localhost:8080/api/questions/topic/1?difficulty=BEGINNER
+
+### Get questions by difficulty
+GET http://localhost:8080/api/questions/difficulty/INTERMEDIATE
+
+### Add a manual question
+POST http://localhost:8080/api/questions/topic/1
+Content-Type: application/json
+
+{
+  "question": "What is the main purpose of the 'public static void main(String[] args)' method in Java?",
+  "options": [
+    "To declare a variable",
+    "To create a new class",
+    "To serve as the entry point of a Java program",
+    "To import packages"
+  ],
+  "correctAnswer": "To serve as the entry point of a Java program",
+  "explanation": "The main method serves as the entry point for Java applications. When you run a Java program, the JVM looks for this method to begin program execution.",
+  "difficultyLevel": "BEGINNER"
+} 
