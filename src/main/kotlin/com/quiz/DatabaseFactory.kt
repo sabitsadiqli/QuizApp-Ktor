@@ -11,6 +11,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 object DatabaseFactory {
     fun init() {
+
         val dbUrl = System.getenv("DATABASE_URL")
             ?: throw IllegalArgumentException("DATABASE_URL is not set")
         val dbUser = System.getenv("DB_USER")

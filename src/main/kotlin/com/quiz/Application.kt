@@ -24,18 +24,24 @@ import com.quiz.modules.quiz.quizRoutes
 import io.ktor.server.http.content.files
 import io.ktor.server.http.content.static
 import io.ktor.server.http.content.staticFiles
+import io.ktor.server.http.content.staticResources
 import java.io.File
 
 fun main() {
-    embeddedServer(Netty, port = 8080) {
+    val port = System.getenv("PORT")?.toInt() ?: 8080
+    embeddedServer(Netty, port = port, host = "0.0.0.0") {
         module()
     }.start(wait = true)
 }
 
 fun Application.module() {
+    // Initialize database
     DatabaseFactory.init()
+
+    // Koin dependency injection
     val authFacade: AuthFacade by inject()
     val quizFacade: QuizFacade by inject()
+
     install(ContentNegotiation) {
         json()
     }
@@ -71,12 +77,13 @@ fun Application.module() {
     }
 
     routing {
+        // Serve uploaded images
         staticFiles("/uploads", File(AppConfig.UPLOAD_DIR))
 
+        // App routes
         authRoutes(authFacade)
         quizRoutes(quizFacade)
         adminQuizRoutes(quizFacade)
         imageUploadRoutes()
     }
 }
-
