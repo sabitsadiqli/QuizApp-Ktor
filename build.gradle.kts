@@ -39,8 +39,8 @@ dependencies {
     implementation("io.ktor:ktor-serialization-kotlinx-json:2.3.7")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
 
-    // H2 Database
-    implementation("com.h2database:h2:2.2.224")
+    //Postgresql
+    implementation("org.postgresql:postgresql:42.7.3")
 
     implementation("org.jetbrains.exposed:exposed-core:0.45.0")
     implementation("org.jetbrains.exposed:exposed-dao:0.45.0")

@@ -12,17 +12,20 @@ import org.jetbrains.exposed.sql.transactions.transaction
 object DatabaseFactory {
     fun init() {
         val db = Database.connect(
-            "jdbc:h2:./quizdb;MODE=MySQL;DB_CLOSE_DELAY=-1;",
-            driver = "org.h2.Driver",
-            user = "root",
-            password = ""
+            url = System.getenv("DATABASE_URL") ?: "jdbc:postgresql://localhost:5432/quizdb",
+            driver = "org.postgresql.Driver",
+            user = System.getenv("DB_USER") ?: "postgres",
+            password = System.getenv("DB_PASSWORD") ?: "postgres"
         )
+
         transaction(db) {
-            SchemaUtils.create(UserTable)
-            SchemaUtils.create(GradeTable)
-            SchemaUtils.create(QuizTable)
-            SchemaUtils.create(QuestionTable)
-            SchemaUtils.create(UserQuizProgressTable)
+            SchemaUtils.create(
+                UserTable,
+                GradeTable,
+                QuizTable,
+                QuestionTable,
+                UserQuizProgressTable
+            )
         }
     }
 }
