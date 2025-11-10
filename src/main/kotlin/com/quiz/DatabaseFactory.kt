@@ -11,11 +11,18 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 object DatabaseFactory {
     fun init() {
+        val dbUrl = System.getenv("DATABASE_URL")
+            ?: throw IllegalArgumentException("DATABASE_URL is not set")
+        val dbUser = System.getenv("DB_USER")
+            ?: throw IllegalArgumentException("DB_USER is not set")
+        val dbPassword = System.getenv("DB_PASSWORD")
+            ?: throw IllegalArgumentException("DB_PASSWORD is not set")
+
         val db = Database.connect(
-            url = System.getenv("DATABASE_URL") ?: "jdbc:postgresql://localhost:5432/quizdb",
+            url = dbUrl,
             driver = "org.postgresql.Driver",
-            user = System.getenv("DB_USER") ?: "postgres",
-            password = System.getenv("DB_PASSWORD") ?: "postgres"
+            user = dbUser,
+            password = dbPassword
         )
 
         transaction(db) {
