@@ -12,7 +12,14 @@ interface QuizRepository {
     fun getQuestionsByQuiz(quizId: Int): List<QuestionDTO>
     fun completeQuiz(userId: String, quizId: Int)
     fun addQuizToCategory(categoryId: Int, title: String): QuizWithStatus
-    fun addQuestionToQuiz(quizId: Int, question: QuestionCreateRequest): QuestionDTO
+    fun addQuestionWithCategoryAndQuiz(
+        categoryId: Int?,
+        categoryName: String?,
+        quizId: Int?,
+        quizTitle: String?,
+        question: QuestionCreateRequest
+    ): QuestionDTO
+
     fun editQuestion(questionId: Int, updatedQuestion: QuestionCreateRequest): QuestionDTO
     fun getAllQuestionsByQuiz(quizId: Int): List<QuestionDTO>
 }

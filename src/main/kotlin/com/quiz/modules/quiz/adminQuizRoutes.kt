@@ -1,6 +1,7 @@
 package com.quiz.modules.quiz
 
 import com.quiz.facade.QuizFacade
+import com.quiz.modules.quiz.model.FullQuestionCreateRequest
 import com.quiz.modules.quiz.model.QuestionCreateRequest
 import com.quiz.modules.quiz.model.QuizCreateRequest
 import io.ktor.http.HttpStatusCode
@@ -20,8 +21,14 @@ fun Route.adminQuizRoutes(quizFacade: QuizFacade) {
     }
 
     post("/admin/question") {
-        val request = call.receive<QuestionCreateRequest>()
-        val newQuestion = quizFacade.addQuestionToQuiz(request.quizId, request)
+        val request = call.receive<FullQuestionCreateRequest>()
+        val newQuestion = quizFacade.addQuestionWithCategoryAndQuiz(
+            categoryId = request.categoryId,
+            categoryName = request.categoryName,
+            quizId = request.quizId,
+            quizTitle = request.quizTitle,
+            question = request.question
+        )
         call.respond(HttpStatusCode.Created, newQuestion)
     }
 

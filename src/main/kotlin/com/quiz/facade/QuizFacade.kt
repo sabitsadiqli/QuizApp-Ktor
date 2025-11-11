@@ -25,8 +25,14 @@ class QuizFacade(private val repository: QuizRepository) {
     fun addQuizToCategory(categoryId: Int, title: String): QuizWithStatus =
         repository.addQuizToCategory(categoryId, title)
 
-    fun addQuestionToQuiz(quizId: Int, question: QuestionCreateRequest): QuestionDTO =
-        repository.addQuestionToQuiz(quizId, question)
+    fun addQuestionWithCategoryAndQuiz(
+        categoryId: Int?,
+        categoryName: String?,
+        quizId: Int?,
+        quizTitle: String?,
+        question: QuestionCreateRequest
+    ): QuestionDTO =
+        repository.addQuestionWithCategoryAndQuiz(categoryId,categoryName,quizId,quizTitle,question)
 
     fun editQuestion(questionId: Int, updatedQuestion: QuestionCreateRequest): QuestionDTO =
         repository.editQuestion(questionId, updatedQuestion)

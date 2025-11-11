@@ -10,13 +10,8 @@ import com.quiz.modules.quiz.model.QuestionDTO
 import com.quiz.modules.quiz.model.QuizWithStatus
 import com.quiz.user.UserTable
 import org.jetbrains.exposed.dao.id.EntityID
-import org.jetbrains.exposed.sql.and
-import org.jetbrains.exposed.sql.insertAndGetId
-import org.jetbrains.exposed.sql.insertIgnore
-import org.jetbrains.exposed.sql.select
-import org.jetbrains.exposed.sql.selectAll
+import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
-import org.jetbrains.exposed.sql.update
 
 class QuizRepositoryImpl : QuizRepository {
     override fun unlockInitialQuizzesForUser(userId: String) = transaction {
@@ -130,9 +125,27 @@ class QuizRepositoryImpl : QuizRepository {
         )
     }
 
-    override fun addQuestionToQuiz(quizId: Int, question: QuestionCreateRequest): QuestionDTO = transaction {
+    override fun addQuestionWithCategoryAndQuiz(
+        categoryId: Int?,
+        categoryName: String?,
+        quizId: Int?,
+        quizTitle: String?,
+        question: QuestionCreateRequest
+    ): QuestionDTO = transaction {
+        val finalCategoryId = GradeTable.insertAndGetId {
+            it[name] =
+                categoryName ?: throw IllegalArgumentException("Category name required when creating new category")
+            it[isLocked] = false
+        }.value
+
+        val finalQuizId = quizId ?: QuizTable.insertAndGetId {
+            it[grade] = EntityID(finalCategoryId, GradeTable)
+            it[title] = quizTitle ?: throw IllegalArgumentException("Quiz title required when creating new quiz")
+            it[isLocked] = true
+        }.value
+
         val newQuestionId = QuestionTable.insertAndGetId {
-            it[quiz] = EntityID(quizId, QuizTable)
+            it[quiz] = EntityID(finalQuizId, QuizTable)
             it[questionText] = question.questionText
             it[optionA] = question.options[0]
             it[optionB] = question.options[1]
@@ -151,9 +164,8 @@ class QuizRepositoryImpl : QuizRepository {
         )
     }
 
+
     override fun editQuestion(questionId: Int, updatedQuestion: QuestionCreateRequest): QuestionDTO = transaction {
-        val quizExists = QuizTable.select { QuizTable.id eq updatedQuestion.quizId }.singleOrNull()
-            ?: error("Quiz not found")
 
         QuestionTable.update({ QuestionTable.id eq questionId }) {
             it[quiz] = EntityID(updatedQuestion.quizId, QuizTable)
